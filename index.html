@@ -10,7 +10,22 @@
 </head>
 <body>
   <div class="main">
-    <p class="main__content"></p>
+    <h1>Register form</h1>
+    <form class="form-register">
+      <input id="username" type="text" placeholder="Username"/>
+      <br>
+      <input id="password" type="text" placeholder="password"/>
+      <br>
+      <input id="firstName" type="text" placeholder="firstName"/>
+      <br>
+      <input id="lastName" type="text" placeholder="lastName"/>
+      <br>
+      <input type="radio" id="male" name="gender" value="male">
+      <label for="male">Nam</label><br>
+      <input type="radio" id="female" name="gender" value="female">
+      <label for="female">Nữ</label><br>
+      <button type="submit">Submit</button>
+    </form>
   </div>
 
   <script src="./js/main.js"></script>
