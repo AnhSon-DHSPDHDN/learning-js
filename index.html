@@ -13,6 +13,7 @@
     <h1>Register form</h1>
     <form class="js-form-register">
       <input id="username" type="text" placeholder="Username"/>
+      <span class="error js-err-user-name"></span>
       <br>
       <input id="password" type="text" placeholder="password"/>
       <br>
@@ -27,6 +28,8 @@
       <button type="submit">Submit</button>
       <button class="js-btn-reset">Reset</button>
     </form>
+
+    <div class="js-content-result"></div>
   </div>
 
   <script src="./js/main.js"></script>
