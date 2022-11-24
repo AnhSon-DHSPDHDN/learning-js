@@ -5,7 +5,8 @@ function main() {
   const eleInputPassword = document.querySelector('#password')
   const eleInputFirstName = document.querySelector('#firstName')
   const eleInputLastName = document.querySelector('#lastName')
-  const eleContentResult = document.querySelector('.js-content-result')
+  const eleContentTable = document.querySelector('.js-content-table')
+  const listData = [];
 
   function handleResetForm() {
     eleFormRegister.reset()
@@ -15,17 +16,39 @@ function main() {
     document.querySelector('.js-err-user-name').textContent = ""
   }
 
-  const renderContentResult = (formValue) => {
-    console.log('renderContent', formValue)
-    handleResetError()
+  function renderDataTable() {
+    if (listData.length === 0) return
+    let result = ''
 
-    eleContentResult.innerHTML = `
-      <p>Username is: ${formValue.username}</p>
-      <p>Password is: ${formValue.password}</p>
-      <p>FirstName is: ${formValue.firstName}</p>
-      <p>Last Name is: ${formValue.lastName}</p>
-      <p>Gender is: ${formValue.gender || 'Không rõ'}</p>
-    `
+    listData.forEach((data) => {
+      let computedGenderClass = ''
+      switch (data?.gender) {
+        case 'male':
+          computedGenderClass = 'gender-male'
+          break;
+        case 'female':
+          computedGenderClass = 'gender-female'
+          break;
+        default:
+          computedGenderClass = 'gender-unknown'
+          break;
+      }
+
+      result += `
+        <tr class="${computedGenderClass}">
+          <td>${data?.username}</td>
+          <td>${data?.password}</td>
+          <td>${data?.lastName}</td>
+          <td>${data?.firstName}</td>
+          <td>${data?.gender || ''}</td>
+          <td>
+            <button>Xóa</button>
+            <button>Sửa</button>
+          </td>
+        </tr>
+      `
+    })
+    eleContentTable.innerHTML = result
   }
 
   eleBtnReset.addEventListener('click', (event) => {
@@ -35,7 +58,6 @@ function main() {
 
   eleFormRegister.addEventListener('submit', event => {
     event.preventDefault()
-
     const formValue = {
       username: eleInputUsername.value,
       password: eleInputPassword.value,
@@ -54,7 +76,9 @@ function main() {
       return
     }
 
-    renderContentResult(formValue)
+    listData.push(formValue)
+    renderDataTable()
+    handleResetError()
     handleResetForm()
   })
 }

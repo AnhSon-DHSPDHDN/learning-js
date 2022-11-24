@@ -6,3 +6,26 @@
 .error {
   color: red;
 }
+
+.table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, table td {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.gender-male {
+  background-color: chartreuse;
+}
+
+.gender-female {
+  background-color: pink;
+}
+
+.gender-unknown {
+  background-color: purple;
+}
