@@ -6,7 +6,7 @@ function main() {
   const eleInputFirstName = document.querySelector('#firstName')
   const eleInputLastName = document.querySelector('#lastName')
   const eleContentTable = document.querySelector('.js-content-table')
-  const listData = [];
+  const listData = JSON.parse(localStorage.getItem("listData")) || [];
 
   function handleResetForm() {
     eleFormRegister.reset()
@@ -17,10 +17,9 @@ function main() {
   }
 
   function renderDataTable() {
-    if (listData.length === 0) return
     let result = ''
 
-    listData.forEach((data) => {
+    listData.forEach((data, index) => {
       let computedGenderClass = ''
       switch (data?.gender) {
         case 'male':
@@ -42,13 +41,23 @@ function main() {
           <td>${data?.firstName}</td>
           <td>${data?.gender || ''}</td>
           <td>
-            <button>Xóa</button>
+            <button data-index="${index}">Xóa</button>
             <button>Sửa</button>
           </td>
         </tr>
       `
     })
     eleContentTable.innerHTML = result
+
+    document.querySelectorAll(`[data-index]`).forEach((eleBtn) => {
+      eleBtn.addEventListener('click', () => {
+        const dataIndex = eleBtn.getAttribute("data-index")
+        listData.splice(Number(dataIndex), 1)
+        localStorage.setItem('listData', JSON.stringify(listData))
+        renderDataTable()
+        console.log('delete');
+      })
+    })
   }
 
   eleBtnReset.addEventListener('click', (event) => {
@@ -77,10 +86,15 @@ function main() {
     }
 
     listData.push(formValue)
+    localStorage.setItem('listData', JSON.stringify(listData))
     renderDataTable()
     handleResetError()
     handleResetForm()
   })
+
+  if (listData.length > 0) {
+    renderDataTable()
+  }
 }
 
 main()
