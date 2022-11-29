@@ -1,4 +1,8 @@
 function main() {
+  let isEditFlag = {
+    flag: false,
+    indexEdit: -1,
+  }
   const eleFormRegister = document.querySelector('.js-form-register')
   const eleBtnReset = document.querySelector('.js-btn-reset')
   const eleInputUsername = document.querySelector('#username')
@@ -10,6 +14,28 @@ function main() {
 
   function handleResetForm() {
     eleFormRegister.reset()
+  }
+
+  function handleUpdateFormData(formData) {
+    eleInputUsername.value = formData?.username
+    eleInputPassword.value = formData?.password
+    eleInputFirstName.value = formData?.firstName
+    eleInputLastName.value = formData?.lastName
+    if (formData?.gender === 'male') {
+      document.querySelector('[value="male"]').checked = true
+    }
+
+    if (formData?.gender === 'female') {
+      document.querySelector('[value="female"]').checked = true
+    }
+
+    if (formData?.gender === undefined) {
+      document.querySelector('[value="male"]').checked = false
+      document.querySelector('[value="female"]').checked = false
+    }
+
+    eleFormRegister.style.display = 'none';
+    eleFormRegister.style.display = 'block';
   }
 
   function handleResetError() {
@@ -42,12 +68,25 @@ function main() {
           <td>${data?.gender || ''}</td>
           <td>
             <button data-index="${index}">Xóa</button>
-            <button>Sửa</button>
+            <button data-index-edit="${index}">Sửa</button>
           </td>
         </tr>
       `
     })
     eleContentTable.innerHTML = result
+
+    document.querySelectorAll(`[data-index-edit]`).forEach((eleBtn) => {
+      eleBtn.addEventListener('click', () => {
+        const dataIndex = eleBtn.getAttribute("data-index-edit")
+        isEditFlag = {
+          flag: true,
+          indexEdit: dataIndex
+        }
+        const currentDataEdit = listData[Number(dataIndex)]
+        handleUpdateFormData(currentDataEdit)
+        console.log('edit', currentDataEdit);
+      })
+    })
 
     document.querySelectorAll(`[data-index]`).forEach((eleBtn) => {
       eleBtn.addEventListener('click', () => {
@@ -85,7 +124,17 @@ function main() {
       return
     }
 
-    listData.push(formValue)
+    if (isEditFlag.flag) {
+      // Handle edit
+      listData[isEditFlag.indexEdit] = formValue
+      isEditFlag = {
+        flag: false,
+        indexEdit: -1,
+      }
+    } else {
+      listData.push(formValue)
+    }
+
     localStorage.setItem('listData', JSON.stringify(listData))
     renderDataTable()
     handleResetError()
