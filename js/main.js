@@ -31,12 +31,22 @@ const handleResetForm = (event) => {
   eleLeftForm.reset()
 }
 
-const handleMakeDoneTask = () => {
-
+const handleMakeDoneTask = (id) => {
+  const existedIndex = taskLists.findIndex(taskItem => taskItem.id === id)
+  const currentTask = taskLists[existedIndex]
+  taskLists[existedIndex] = {
+    ...currentTask,
+    isDone: !currentTask.isDone,
+  }
+  localStorage.setItem(keyLocalTaskList, JSON.stringify(taskLists))
+  handleReRenderTaskList()
 }
 
-const handleDeleteTask = () => {
-
+const handleDeleteTask = (id) => {
+  const existedIndex = taskLists.findIndex(taskItem => taskItem.id === id)
+  taskLists.splice(existedIndex, 1)
+  localStorage.setItem(keyLocalTaskList, JSON.stringify(taskLists))
+  handleReRenderTaskList()
 }
 
 const handleReRenderTaskList = () => {
@@ -49,14 +59,29 @@ const handleReRenderTaskList = () => {
         <td>${task.taskDescription}</td>
         <td>${task.taskPriority}</td>
         <td>
-          <button>Done</button>
-          <button>Del</button>
+          <button data-done-id="${task.id}">Done</button>
+          <button data-del-id="${task.id}">Del</button>
         </td>
       </tr>
     `
   })
 
   eleBodyTaskList.innerHTML = html
+  // Handle Event del
+  document.querySelectorAll("[data-del-id]").forEach(btnDelete => {
+    btnDelete.addEventListener('click', () => {
+      const id = Number(btnDelete.getAttribute("data-del-id"))
+      handleDeleteTask(id)
+    })
+  })
+
+  // Handle Event Done
+  document.querySelectorAll("[data-done-id]").forEach(btnDone => {
+    btnDone.addEventListener('click', () => {
+      const id = Number(btnDone.getAttribute("data-done-id"))
+      handleMakeDoneTask(id)
+    })
+  })
 }
 
 function main() {
