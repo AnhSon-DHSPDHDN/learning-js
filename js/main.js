@@ -1,5 +1,10 @@
-function main() {
-  alert('Welcome to Javascript')
-}
+const a = 8
 
-main()
+$('.btn').click(() => {
+  if ($('.title').hasClass('color-red')) {
+    $('.title').removeClass('color-red')
+  } else {
+    $('.title').hide(1000)
+    $('.title').addClass('color-red')
+  }
+})
